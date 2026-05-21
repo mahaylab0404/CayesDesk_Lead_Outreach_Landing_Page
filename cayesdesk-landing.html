@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CayesDesk Pilot Program</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0A0A0A;
+      --bg-2: #0D0D12;
+      --bg-3: #101018;
+      --accent: #00E5FF;
+      --accent-dim: rgba(0, 229, 255, 0.12);
+      --accent-glow: rgba(0, 229, 255, 0.25);
+      --violet: #7B61FF;
+      --violet-dim: rgba(123, 97, 255, 0.12);
+      --text: #FFFFFF;
+      --text-muted: #6B7280;
+      --text-subtle: #9CA3AF;
+      --border: rgba(255,255,255,0.07);
+      --border-bright: rgba(0, 229, 255, 0.35);
+      --card-bg: rgba(255,255,255,0.025);
+      --radius: 14px;
+      --radius-pill: 100px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Animations ─── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes ctaPulse {
+      0%, 100% { box-shadow: 0 0 18px 4px rgba(0,229,255,0.35); }
+      50%       { box-shadow: 0 0 32px 10px rgba(0,229,255,0.55); }
+    }
+    @keyframes glowFloat {
+      0%, 100% { transform: translate(-50%, -50%) scale(1);   opacity: 0.45; }
+      50%       { transform: translate(-50%, -50%) scale(1.1); opacity: 0.65; }
+    }
+
+    /* ─── Shared layout ─── */
+    .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ─── HERO ─── */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: var(--bg);
+      overflow: hidden;
+      padding: 120px 24px 80px;
+    }
+
+    .hero-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 700px;
+      height: 500px;
+      background: radial-gradient(ellipse at center, rgba(0,229,255,0.18) 0%, transparent 70%);
+      filter: blur(60px);
+      transform: translate(-50%, -50%);
+      animation: glowFloat 6s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      animation: fadeInUp 0.9s ease both;
+    }
+
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid rgba(0,229,255,0.3);
+      border-radius: var(--radius-pill);
+      padding: 5px 16px;
+      margin-bottom: 28px;
+    }
+
+    .hero-headline {
+      font-size: clamp(2.6rem, 6vw, 4.2rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 22px;
+    }
+
+    .hero-headline span {
+      color: var(--accent);
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      font-weight: 400;
+      color: var(--text-subtle);
+      max-width: 600px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+
+    .hero-subtitle strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: var(--accent);
+      color: #000;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      padding: 16px 40px;
+      border-radius: var(--radius-pill);
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      animation: ctaPulse 3s ease-in-out infinite;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 0 40px 14px rgba(0,229,255,0.5);
+    }
+
+    .demo-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      padding: 9px 20px;
+      font-size: 14px;
+      color: var(--text-subtle);
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+
+    .demo-pill:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.2);
+      color: var(--text);
+    }
+
+    .demo-pill svg { flex-shrink: 0; }
+
+    .hero-cta-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    /* ─── COMPARISON ─── */
+    #comparison {
+      background: var(--bg-2);
+      padding: 100px 24px;
+      position: relative;
+    }
+
+    #comparison::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(123,97,255,0.4), rgba(0,229,255,0.4), transparent);
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .section-headline {
+      font-size: clamp(1.9rem, 4vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      text-align: center;
+      margin-bottom: 60px;
+      line-height: 1.15;
+    }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .compare-card {
+      border-radius: var(--radius);
+      padding: 40px 36px;
+      border: 1px solid var(--border);
+    }
+
+    .compare-card.left {
+      background: linear-gradient(135deg, rgba(123,97,255,0.08) 0%, rgba(123,97,255,0.03) 100%);
+      border-color: rgba(123,97,255,0.2);
+    }
+
+    .compare-card.right {
+      background: linear-gradient(135deg, rgba(0,229,255,0.08) 0%, rgba(0,229,255,0.03) 100%);
+      border-color: rgba(0,229,255,0.2);
+    }
+
+    .compare-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: var(--radius-pill);
+      margin-bottom: 20px;
+    }
+
+    .compare-badge.old {
+      background: rgba(123,97,255,0.15);
+      color: #B39DFF;
+      border: 1px solid rgba(123,97,255,0.3);
+    }
+
+    .compare-badge.new {
+      background: rgba(0,229,255,0.12);
+      color: var(--accent);
+      border: 1px solid rgba(0,229,255,0.3);
+    }
+
+    .compare-card h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      letter-spacing: -0.01em;
+    }
+
+    .compare-card.left h3 { color: #C4B5FD; }
+    .compare-card.right h3 { color: var(--accent); }
+
+    .compare-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .compare-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.95rem;
+      color: var(--text-subtle);
+      line-height: 1.5;
+    }
+
+    .compare-list li .icon {
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+
+    .compare-card.right .compare-list li { color: #D1FAF6; }
+
+    .stat-highlight {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: var(--accent);
+      letter-spacing: -0.03em;
+      display: block;
+      margin-top: 28px;
+    }
+
+    /* ─── FEATURES ─── */
+    #features {
+      background: var(--bg-3);
+      padding: 100px 24px;
+      position: relative;
+    }
+
+    #features::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,229,255,0.3), transparent);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+      transition: transform 0.22s ease, border-color 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--border-bright);
+      background: rgba(0,229,255,0.04);
+      box-shadow: 0 8px 32px rgba(0,229,255,0.1);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent-dim);
+      border: 1px solid rgba(0,229,255,0.2);
+      border-radius: 12px;
+      margin-bottom: 22px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .feature-card h3 span { color: var(--accent); }
+
+    .feature-card p {
+      font-size: 0.9rem;
+      color: var(--text-subtle);
+      line-height: 1.65;
+    }
+
+    /* ─── FOOTER CTA ─── */
+    #footer-cta {
+      background: var(--bg);
+      padding: 100px 24px 80px;
+      text-align: center;
+      position: relative;
+    }
+
+    #footer-cta::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,229,255,0.4), transparent);
+    }
+
+    .footer-glow {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 600px;
+      height: 300px;
+      background: radial-gradient(ellipse at center bottom, rgba(0,229,255,0.12) 0%, transparent 70%);
+      filter: blur(50px);
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .footer-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-headline {
+      font-size: clamp(2rem, 4.5vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+      line-height: 1.1;
+    }
+
+    .footer-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-subtle);
+      margin-bottom: 44px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .scarcity-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255, 80, 80, 0.1);
+      border: 1px solid rgba(255, 80, 80, 0.25);
+      border-radius: var(--radius-pill);
+      padding: 6px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #FF8080;
+      letter-spacing: 0.04em;
+      margin-bottom: 36px;
+    }
+
+    .scarcity-dot {
+      width: 6px; height: 6px;
+      background: #FF5050;
+      border-radius: 50%;
+      box-shadow: 0 0 6px #FF5050;
+    }
+
+    /* ─── Mobile ─── */
+    @media (max-width: 768px) {
+      #hero {
+        padding-top: 80px;
+        padding-bottom: 60px;
+        min-height: 100svh;
+      }
+
+      .compare-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .compare-card { padding: 28px 24px; }
+      .feature-card { padding: 28px 24px; }
+
+      #comparison,
+      #features,
+      #footer-cta {
+        padding-top: 72px;
+        padding-bottom: 72px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-headline { font-size: 2.1rem; }
+      .btn-primary { width: 100%; text-align: center; }
+      .demo-pill { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SECTION 1: HERO
+  ════════════════════════════════════════════════════════════ -->
+  <section id="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Limited Pilot · 5 Spots Only</div>
+
+      <h1 class="hero-headline">
+        The <span>CayesDesk</span><br />Pilot Program.
+      </h1>
+
+      <p class="hero-subtitle">
+        Exclusive access for the first 5 clinics.
+        <strong>$497 fully credited toward Month 1.</strong>
+        Stop losing high-value consults to voicemail.
+      </p>
+
+      <div class="hero-cta-group">
+        <a href="#footer-cta" class="btn-primary">Claim Your Spot</a>
+        <a href="tel:+15613003697" class="demo-pill">
+          <!-- Phone icon -->
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.5 2 2 0 0 1 3.59 1.3h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.07 6.07l.93-.93a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+          Hear the live AI concierge: +1 (561) 300-3697
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SECTION 2: COMPARISON
+  ════════════════════════════════════════════════════════════ -->
+  <section id="comparison">
+    <div class="section-inner">
+      <p class="section-label">The Difference</p>
+      <h2 class="section-headline">Elite Intake. Zero Payroll.</h2>
+
+      <div class="compare-grid">
+        <!-- Left: Old way -->
+        <div class="compare-card left">
+          <span class="compare-badge old">Old Way</span>
+          <h3>The Human Receptionist</h3>
+          <ul class="compare-list">
+            <li>
+              <span class="icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9065FA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              </span>
+              <span><strong style="color:#C4B5FD">$45,000+</strong> average annual salary — before benefits.</span>
+            </li>
+            <li>
+              <span class="icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9065FA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              </span>
+              PTO, sick days, and scheduling gaps — all on your dime.
+            </li>
+            <li>
+              <span class="icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9065FA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              </span>
+              Inevitable missed calls during peak hours. Revenue disappears.
+            </li>
+          </ul>
+        </div>
+
+        <!-- Right: CayesDesk -->
+        <div class="compare-card right">
+          <span class="compare-badge new">CayesDesk</span>
+          <h3>The CayesDesk Solution</h3>
+          <ul class="compare-list">
+            <li>
+              <span class="icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              24/7 flawless intake capture — nights, weekends, holidays.
+            </li>
+            <li>
+              <span class="icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span><strong style="color:#00E5FF">73% lower cost</strong> than a front-office hire. Saves thousands in overhead annually.</span>
+            </li>
+            <li>
+              <span class="icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              Zero missed opportunities. Every high-value consult captured.
+            </li>
+          </ul>
+          <span class="stat-highlight">73% less.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SECTION 3: FEATURES
+  ════════════════════════════════════════════════════════════ -->
+  <section id="features">
+    <div class="section-inner">
+      <p class="section-label">What You Get</p>
+      <h2 class="section-headline">Built for Clinics That<br />Refuse to Miss.</h2>
+
+      <div class="features-grid">
+        <!-- Card 1: Globe / Multilingual -->
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="2" y1="12" x2="22" y2="12"/>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+          </div>
+          <h3><span>24/7</span> Multilingual</h3>
+          <p>Answers instantly, day or night. Fluent in 20+ languages including English, Spanish, French, and Portuguese.</p>
+        </div>
+
+        <!-- Card 2: Nodes / Integration -->
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="18" cy="5" r="3"/>
+              <circle cx="6" cy="12" r="3"/>
+              <circle cx="18" cy="19" r="3"/>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+            </svg>
+          </div>
+          <h3>Seamless <span>Integration</span></h3>
+          <p>Plugs directly into your CRM, calendar, and email. Zero new software for your staff to learn.</p>
+        </div>
+
+        <!-- Card 3: Trend / Lead Nurturing -->
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+              <polyline points="17 6 23 6 23 12"/>
+            </svg>
+          </div>
+          <h3>Active <span>Lead Nurturing</span></h3>
+          <p>Automated follow-up via SMS and email sequences. We hunt the conversion to keep the intent hot.</p>
+        </div>
+
+        <!-- Card 4: Shield / Protocols -->
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <h3>Bespoke <span>Protocols</span></h3>
+          <p>Custom-tailored to your practice. Operates strictly on your approved scripts and escalation boundaries.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SECTION 4: FOOTER CTA
+  ════════════════════════════════════════════════════════════ -->
+  <section id="footer-cta">
+    <div class="footer-glow"></div>
+    <div class="section-inner footer-content">
+      <div class="scarcity-badge">
+        <span class="scarcity-dot"></span>
+        Only 5 spots available
+      </div>
+
+      <h2 class="footer-headline">Ready to stop<br />bleeding revenue?</h2>
+
+      <p class="footer-subtitle">
+        Claim one of the 5 pilot spots.<br />
+        Live on your systems in <strong style="color:#00E5FF">3 days.</strong>
+      </p>
+
+      <div class="hero-cta-group">
+        <a href="mailto:hello@cayesdesk.com" class="btn-primary">Lock In My Pilot ($497)</a>
+        <a href="tel:+15613003697" class="demo-pill">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.5 2 2 0 0 1 3.59 1.3h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.07 6.07l.93-.93a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+          Hear the live AI concierge: +1 (561) 300-3697
+        </a>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>
